@@ -11,6 +11,7 @@ app.use(express.json())
 
 app.use('/api/auth', authroute)
 
+
 mongoose.connect(mongo_url).then(() => {
     console.log("Connection done");
     app.listen(PORT, () => {
