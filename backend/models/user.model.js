@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://tse4.mm.bing.net/th?id=OIP.5JbXzPVIhu6I6qsHF8JyUAHaHa&pid=Api&P=0&h=180"
     }
-})
+},{timestamps: true})
 
 const userModel = mongoose.model("Users", userSchema)
 export default userModel
