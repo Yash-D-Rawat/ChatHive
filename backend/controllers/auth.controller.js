@@ -39,6 +39,7 @@ export const signup = async (req, res) => {
 
         if (newuser) {
             generateAndSet(newuser._id, res)
+            // console.log(newuser)
             return res.status(201).json(newuser)
         }
         else {

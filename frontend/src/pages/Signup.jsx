@@ -1,36 +1,53 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 // bg-gradient-to-r from-[#080C14] via-[#122232] to-[#080C14]
 function Signup() {
+    const navigate = useNavigate();
     const [userDetails, setuserDetails] = useState({
         fullname: '',
         username: '',
         password: '',
-        confirmpassword:'',
+        confirmpassword: '',
         gender: ''
     })
 
-    const handleSubmit = async ()=>{
+    const handleSubmit = async () => {
         try {
-            if(userDetails.password !== userDetails.confirmpassword){
-                console.log("same ppass")
+            if (userDetails.password !== userDetails.confirmpassword) {
+                console.log("not same ppass")
                 return;
             }
-
-            
+            const config = {
+                headers: {
+                    "Content-type": "application/json"
+                }
+            }
+            const { fullname, username, password, confirmpassword, gender } = userDetails;
+            const { data } = await axios.post("http://localhost:8000/api/auth/signup", { fullname, username, password, confirmpassword, gender }, config)
+            console.log("Signup successful:", data);
+            localStorage.setItem("userInfo", JSON.stringify(data))
+            setuserDetails({
+                fullname: '',
+                username: '',
+                password: '',
+                confirmpassword: '',
+                gender: ''
+            });
+            console.log(data)
+            navigate("/chats");
         } catch (error) {
-            console.log(error)
+            console.log("Signup error:", error)
         }
     }
-    
 
-    function handleChange (e){
-        const {name, value} = e.target;
-        setuserDetails({
-            ...setuserDetails,
-            [name]:value
-        })
-        // console.log(userDetails); 
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setuserDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value
+        }));
     }
 
     return (
@@ -41,7 +58,7 @@ function Signup() {
                 <h1 className='text-3xl font-bold text-white mb-5'>Sign Up</h1>
                 <form className='flex flex-col gap-4 h-full'>
                     <div className='flex flex-col'>
-                        <label className='text-[#94A0A9] mb-1' htmlFor="">Full Name</label>
+                        <label className='text-[#94A0A9] mb-1'>Full Name</label>
                         <input
                             type="text"
                             name="fullname"
@@ -65,7 +82,7 @@ function Signup() {
                     </div>
 
                     <div className='flex flex-col'>
-                        <label className='text-[#94A0A9] mb-1' htmlFor="">Username</label>
+                        <label className='text-[#94A0A9] mb-1'>Username</label>
                         <input
                             type="text"
                             name="username"
@@ -89,7 +106,7 @@ function Signup() {
                     </div>
 
                     <div className='flex flex-col'>
-                        <label className='text-[#94A0A9] mb-1' htmlFor="">Password</label>
+                        <label className='text-[#94A0A9] mb-1'>Password</label>
                         <input
                             type="password"
                             name="password"
@@ -113,7 +130,7 @@ function Signup() {
                     </div>
 
                     <div className='flex flex-col'>
-                        <label className='text-[#94A0A9] mb-1' htmlFor="">Confirm Password</label>
+                        <label className='text-[#94A0A9] mb-1'>Confirm Password</label>
                         <input
                             type="password"
                             name="confirmpassword"
@@ -152,7 +169,7 @@ function Signup() {
                         </select>
                     </div>
 
-                    <button type='submit' className='bg-white rounded-md p-2 mt-5'>Sign Up</button>
+                    <button type='button' onClick={handleSubmit} className='bg-white rounded-md p-2 mt-5'>Sign Up</button>
                     <h1 className='w-full text-center text-white'>Already have an account? <Link to="/api/auth/login">Sign In</Link></h1>
                 </form>
 

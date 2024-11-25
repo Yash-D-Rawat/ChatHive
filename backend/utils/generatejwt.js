@@ -7,7 +7,7 @@ const generateAndSet = (userid, res)=>{
     })
 
     res.cookie("jwt", token,{
-        maxAge: 86400,
+        maxAge: 86400*1000,
         httpOnly: true,
         sameSite: "strict"
     })
